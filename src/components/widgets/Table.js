@@ -1,14 +1,24 @@
+// Table.js
 import React, { lazy, Suspense, memo, useState } from 'react';
 import FilterInput from '../common/FilterInput';
 import Paginator from './Paginator';
+import { faPen, faTrash, faBookReader } from '@fortawesome/free-solid-svg-icons';
 
 const LazyTableHead = lazy(() => import('../common/LazyTableHead'));
 const LazyTableBody = lazy(() => import('../common/LazyTableBody'));
+const LazyEditModal = lazy(() => import('../common/EditModal'));
+const LazyDeleteModal = lazy(() => import('../common/DeleteModal'));
+const LazyInfoModal = lazy(() => import('../common/InfoModal'));
 
 export default memo(function Table({ data }) {
   const [filterTerm, setFilterTerm] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 10;
+
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const [isInfoModalOpen, setIsInfoModalOpen] = useState(false);
+  const [selectedItem, setSelectedItem] = useState(null);
 
   const filteredData = data
     ? data.data.filter((item) =>
@@ -22,6 +32,26 @@ export default memo(function Table({ data }) {
   const itemsToShow = filteredData.slice(startIndex, endIndex);
   const handlePageChange = (pageNumber) => {
     setCurrentPage(pageNumber);
+  };
+
+  const handleIconClick = (icon, item) => {
+    if (icon === faPen) {
+      setSelectedItem(item);
+      setIsEditModalOpen(true);
+    } else if (icon === faTrash) {
+      setSelectedItem(item);
+      setIsDeleteModalOpen(true)
+    } else if (icon === faBookReader) {
+      setSelectedItem(item);
+      setIsInfoModalOpen(true)
+    }
+  };
+
+  const closeModal = () => {
+    setIsEditModalOpen(false);
+    setIsDeleteModalOpen(false)
+    setIsInfoModalOpen(false)
+
   };
 
   if (!data) {
@@ -41,11 +71,20 @@ export default memo(function Table({ data }) {
         </thead>
         <tbody>
           <Suspense fallback={<tr>Loading...</tr>}>
-            <LazyTableBody data={itemsToShow} />
+            <LazyTableBody data={itemsToShow} onIconClick={handleIconClick} />
           </Suspense>
         </tbody>
       </table>
       <Paginator totalPages={totalPages} currentPage={currentPage} onPageChange={handlePageChange} />
+      <Suspense fallback={<div>Loading...</div>}>
+        <LazyEditModal isOpen={isEditModalOpen} onClose={closeModal} item={selectedItem} />
+      </Suspense>
+      <Suspense fallback={<div>Loading...</div>}>
+        <LazyDeleteModal isOpen={isDeleteModalOpen} onClose={closeModal} />
+      </Suspense>
+      <Suspense fallback={<div>Loading...</div>}>
+        <LazyInfoModal isOpen={isInfoModalOpen} onClose={closeModal} />
+      </Suspense>
     </div>
   );
 });

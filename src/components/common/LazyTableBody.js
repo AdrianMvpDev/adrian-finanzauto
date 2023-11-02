@@ -2,7 +2,7 @@ import React from 'react';
 import IconGroup from '../common/IconGroup';
 import { faPen, faTrash, faBookReader } from '@fortawesome/free-solid-svg-icons';
 
-export default function LazyTableBody({ data }) {
+export default function LazyTableBody({ data, onIconClick }) {
   return (
     <>
       {data.map((item) => (
@@ -17,7 +17,10 @@ export default function LazyTableBody({ data }) {
             />
           </td>
           <td className="cursor-pointer">
-            <IconGroup icons={[faTrash, faPen, faBookReader]} />
+            <IconGroup
+              icons={[faTrash, faPen, faBookReader]}
+              onItemClick={(icon) => onIconClick(icon, item)}
+            />
           </td>
         </tr>
       ))}
