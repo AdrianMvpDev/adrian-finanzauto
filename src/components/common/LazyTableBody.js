@@ -6,7 +6,10 @@ export default function LazyTableBody({ data, onIconClick }) {
   return (
     <>
       {data.map((item) => (
-        <tr key={item.id} className="border-b text-justify text-[#444b6e] flex flex-col py-3 md:table-row ">
+        <tr
+          key={item.id}
+          className="border-b text-justify text-[#444b6e] rounded-lg border-gray-300 border my-2 flex flex-col p-3 md:table-row md:border-0 md:border-b "
+        >
           <td className="md:p-2 before:content-['Id'] before:mr-0.5 before:font-bold before:text-[#1a6e6a] md:before:content-[]">
             {item.id}
           </td>
