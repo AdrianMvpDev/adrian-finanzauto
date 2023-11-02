@@ -10,7 +10,7 @@ const LazyEditModal = lazy(() => import('../common/EditModal'));
 const LazyDeleteModal = lazy(() => import('../common/DeleteModal'));
 const LazyInfoModal = lazy(() => import('../common/InfoModal'));
 
-export default memo(function Table({ data }) {
+export default memo(function Table({ data, setUserData }) {
   const [filterTerm, setFilterTerm] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 10;
@@ -40,18 +40,17 @@ export default memo(function Table({ data }) {
       setIsEditModalOpen(true);
     } else if (icon === faTrash) {
       setSelectedItem(item);
-      setIsDeleteModalOpen(true)
+      setIsDeleteModalOpen(true);
     } else if (icon === faBookReader) {
       setSelectedItem(item);
-      setIsInfoModalOpen(true)
+      setIsInfoModalOpen(true);
     }
   };
 
   const closeModal = () => {
     setIsEditModalOpen(false);
-    setIsDeleteModalOpen(false)
-    setIsInfoModalOpen(false)
-
+    setIsDeleteModalOpen(false);
+    setIsInfoModalOpen(false);
   };
 
   if (!data) {
@@ -77,7 +76,7 @@ export default memo(function Table({ data }) {
       </table>
       <Paginator totalPages={totalPages} currentPage={currentPage} onPageChange={handlePageChange} />
       <Suspense fallback={<div>Loading...</div>}>
-        <LazyEditModal isOpen={isEditModalOpen} onClose={closeModal} item={selectedItem} />
+        <LazyEditModal isOpen={isEditModalOpen} onClose={closeModal} item={selectedItem} setUserData={setUserData} />
       </Suspense>
       <Suspense fallback={<div>Loading...</div>}>
         <LazyDeleteModal isOpen={isDeleteModalOpen} onClose={closeModal} />

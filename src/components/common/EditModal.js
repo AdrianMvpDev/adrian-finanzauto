@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
-import { updateUserData } from '../../services/api';
+import { fetchUserData, updateUserData } from '../../services/api';
 
-export default function EditModal({ isOpen, onClose, item }) {
+export default function EditModal({ isOpen, onClose, item, setUserData  }) {
   const [editedItem, setEditedItem] = useState(item || {});
 
   useEffect(() => {
@@ -18,17 +18,19 @@ export default function EditModal({ isOpen, onClose, item }) {
     });
   };
 
-  const handleSave = () => {
-    updateUserData(item.id, editedItem) // Reemplaza 'item.id' con el ID del usuario
-      .then((updatedData) => {
-        console.log('Datos actualizados:', updatedData);
-        onClose();
-      })
-      .catch((error) => {
-        console.error('Error al actualizar los datos:', error);
-        onClose(); // Asegúrate de cerrar el modal incluso si hay un error
-      });
+  const handleSave = async () => {
+    try {
+      const updatedData = await updateUserData(editedItem.id, editedItem);
+      console.log('Datos actualizados:', updatedData);
+      const refreshedData = await fetchUserData();
+      onClose();
+      setUserData(refreshedData);
+    } catch (error) {
+      console.error('Error al actualizar los datos:', error);
+      onClose();
+    }
   };
+  
 
   return (
     <div

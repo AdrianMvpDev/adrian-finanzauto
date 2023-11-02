@@ -16,13 +16,11 @@ export default function Home() {
       });
   }, []);
 
-console.log(userData);
-
   return (
     <>
       <Header />
-      <main className='bg-[#fefffd]'>
-        <Table data={userData} />
+      <main className="bg-[#fefffd]">
+        <Table data={userData} setUserData={setUserData}/>
       </main>
     </>
   );
