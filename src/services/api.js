@@ -36,3 +36,18 @@ export async function updateUserData(userId, updatedUserData) {
     throw error;
   }
 }
+
+export async function deleteUserData(userId) {
+  const url = `${API_BASE_URL}/${userId}`;
+  const headers = {
+    'app-id': apiKey,
+  };
+
+  try {
+    const response = await axios.delete(url, { headers });
+    return response.data;
+  } catch (error) {
+    console.error('Error al eliminar el usuario:', error);
+    throw error;
+  }
+}

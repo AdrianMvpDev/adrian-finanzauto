@@ -20,11 +20,12 @@ export default memo(function Table({ data, setUserData }) {
   const [isInfoModalOpen, setIsInfoModalOpen] = useState(false);
   const [selectedItem, setSelectedItem] = useState(null);
 
-  const filteredData = data
-    ? data.data.filter((item) =>
-        `${item.id} ${item.title} ${item.firstName} ${item.lastName}`.toLowerCase().includes(filterTerm.toLowerCase())
-      )
-    : [];
+  const filteredData =
+    data && data.data
+      ? data.data.filter((item) =>
+          `${item.id} ${item.title} ${item.firstName} ${item.lastName}`.toLowerCase().includes(filterTerm.toLowerCase())
+        )
+      : [];
 
   const startIndex = (currentPage - 1) * itemsPerPage;
   const endIndex = startIndex + itemsPerPage;
@@ -44,6 +45,13 @@ export default memo(function Table({ data, setUserData }) {
     } else if (icon === faBookReader) {
       setSelectedItem(item);
       setIsInfoModalOpen(true);
+    }
+  };
+
+  const handleUserDeleted = (userId) => {
+    if (data && data.data) {
+      const updatedData = data.data.filter((user) => user.id !== userId);
+      setUserData({ ...data, data: updatedData });
     }
   };
 
@@ -79,7 +87,13 @@ export default memo(function Table({ data, setUserData }) {
         <LazyEditModal isOpen={isEditModalOpen} onClose={closeModal} item={selectedItem} setUserData={setUserData} />
       </Suspense>
       <Suspense fallback={<div>Loading...</div>}>
-        <LazyDeleteModal isOpen={isDeleteModalOpen} onClose={closeModal} />
+        <LazyDeleteModal
+          isOpen={isDeleteModalOpen}
+          onClose={closeModal}
+          item={selectedItem}
+          setUserData={setUserData}
+          onUserDeleted={handleUserDeleted}
+        />
       </Suspense>
       <Suspense fallback={<div>Loading...</div>}>
         <LazyInfoModal isOpen={isInfoModalOpen} onClose={closeModal} />

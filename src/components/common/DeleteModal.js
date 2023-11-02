@@ -1,4 +1,34 @@
-export default function DeleteModal({ isOpen, onClose, item }) {
+import React, { useState } from 'react';
+import { deleteUserData, fetchUserData } from '../../services/api';
+
+export default function DeleteModal({ isOpen, onClose, item, onUserDeleted, setUserData }) {
+  const [isDeleting, setIsDeleting] = useState(false);
+
+  const handleDelete = async () => {
+    setIsDeleting(true);
+    try {
+      if (item && item.id) {
+        await deleteUserData(item.id);
+
+        const updatedData = await fetchUserData();
+
+        if (onUserDeleted) {
+          onUserDeleted(item.id);
+        }
+        if (setUserData) {
+          setUserData(updatedData);
+        }
+      }
+
+      onClose();
+    } catch (error) {
+      console.error('Error al eliminar el usuario:', error);
+    } finally {
+      setIsDeleting(false);
+      onClose();
+    }
+  };
+
   return (
     <div
       className={`modal ${
@@ -7,7 +37,13 @@ export default function DeleteModal({ isOpen, onClose, item }) {
     >
       <div className="relative w-full max-w-2xl max-h-full m-auto shadow">
         <div className="relative bg-white rounded-lg shadow">
-          <div className="flex items-center space-x-3 p-4 border-b rounded-lg">
+          <div className="flex items-start justify-between p-4 border-b rounded-t">
+            <h2 className="text-lg font-semibold text-gray-800">Eliminar Usuario</h2>
+          </div>
+          <div className="flex items-center space-x-3 p-4 border-b">
+            <p>Estas seguro de eliminar este usuario?</p>
+          </div>
+          <div className="flex items-center space-x-3 p-4 rounded-lg">
             <button
               onClick={onClose}
               type="button"
@@ -16,12 +52,12 @@ export default function DeleteModal({ isOpen, onClose, item }) {
               Cancelar
             </button>
             <button
-              // onClick={handleSave}
+              onClick={handleDelete}
               type="button"
-              className="text-white bg-[#4ed964] hover:opacity-80 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5"
-              // disabled={isSaving}
+              className="text-white bg-red-500 hover:opacity-80 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5"
+              disabled={isDeleting}
             >
-              {/* {isSaving ? 'Guardando...' : 'Guardar Cambios'} */} Ok
+              {isDeleting ? 'Eliminando...' : 'Eliminar'}
             </button>
           </div>
         </div>
