@@ -1,6 +1,6 @@
 import React, { Suspense, lazy, useState } from 'react';
 import Header from '../layout/Header';
-import { createUserData } from '../../services/api';
+import { createUserData, fetchUserData } from '../../services/api'; // Importa las funciones necesarias
 import ModalButtons from '../common/ModalButtons';
 
 const LazyInputField = lazy(() => import('../common/InputField'));
@@ -29,7 +29,7 @@ export default function Create() {
     setIsSaving(true);
     try {
       await createUserData(newUserData);
-      console.log(newUserData);
+      alert('Creado con éxito');
       setNewUserData({
         title: '',
         firstName: '',
@@ -37,7 +37,7 @@ export default function Create() {
         email: '',
         picture: '',
       });
-
+      await fetchUserData();
       setIsSaving(false);
     } catch (error) {
       console.error('Error al crear un nuevo usuario:', error);
@@ -49,7 +49,7 @@ export default function Create() {
     <>
       <Header />
       <main className="bg-[#fefffd]">
-        <div className="w-full px-[15px] mx-auto my-10 md:w-4/5 md:px-0 flex flex-col	gap-3">
+        <div className="w-full px-[15px] mx-auto my-10 md:w-4/5 md:px-0 flex flex-col gap-3">
           <Suspense fallback={<div>Cargando...</div>}>
             <LazySelectField label="Título" name="title" value={newUserData.title} onChange={handleFieldChange} />
             <LazyInputField label="Nombres" name="firstName" value={newUserData.firstName} onChange={handleFieldChange} />
@@ -57,7 +57,7 @@ export default function Create() {
             <LazyInputField label="Email" name="email" value={newUserData.email} onChange={handleFieldChange} />
             <LazyInputField label="Foto" name="picture" value={newUserData.picture} onChange={handleFieldChange} />
           </Suspense>
-          <ModalButtons onSave={handleSave} isSaving={isSaving} textButton={'Guardar'} textButton2={'Guardando...'} />
+          <ModalButtons onSave={handleSave} isSaving={isSaving} textButton={'Crear'} textButton2={'Creando...'} />
         </div>
       </main>
     </>

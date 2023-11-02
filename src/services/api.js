@@ -60,7 +60,7 @@ export async function createUserData(newUserData) {
   };
 
   try {
-    const response = await axios.post(url, {newUserData}, {headers} );
+    const response = await axios.post(url, newUserData, {headers} );
     return response.data;
   } catch (error) {
     console.error('Error al crear un nuevo usuario:', error);
