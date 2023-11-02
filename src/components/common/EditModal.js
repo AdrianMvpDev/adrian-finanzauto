@@ -45,8 +45,8 @@ export default function EditModal({ isOpen, onClose, item, setUserData }) {
         isOpen ? 'flex' : 'hidden'
       } fixed top-0 left-0 right-0 z-50 w-full p-4 overflow-x-hidden overflow-y-auto md:inset-0 h-[calc(100%-1rem)] max-h-full`}
     >
-      <div className="relative w-full max-w-2xl max-h-full m-auto bg-white">
-        <div className="relative bg-white rounded-lg shadow">
+      <div className="relative w-full max-w-2xl max-h-full m-auto shadow">
+        <div className="relative bg-white rounded-lg ">
           <div className="flex items-start justify-between p-4 border-b rounded-t">
             <h2 className="text-lg font-semibold text-gray-800">Editar Usuario</h2>
           </div>
