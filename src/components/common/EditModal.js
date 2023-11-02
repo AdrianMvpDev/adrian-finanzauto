@@ -1,8 +1,9 @@
 import { useState, useEffect } from 'react';
 import { fetchUserData, updateUserData } from '../../services/api';
 
-export default function EditModal({ isOpen, onClose, item, setUserData  }) {
+export default function EditModal({ isOpen, onClose, item, setUserData }) {
   const [editedItem, setEditedItem] = useState(item || {});
+  const [isSaving, setIsSaving] = useState(false);
 
   useEffect(() => {
     if (item) {
@@ -19,18 +20,19 @@ export default function EditModal({ isOpen, onClose, item, setUserData  }) {
   };
 
   const handleSave = async () => {
+    setIsSaving(true);
     try {
-      const updatedData = await updateUserData(editedItem.id, editedItem);
-      console.log('Datos actualizados:', updatedData);
+      await updateUserData(editedItem.id, editedItem);
       const refreshedData = await fetchUserData();
+      setIsSaving(false);
       onClose();
       setUserData(refreshedData);
     } catch (error) {
       console.error('Error al actualizar los datos:', error);
+      setIsSaving(false);
       onClose();
     }
   };
-  
 
   return (
     <div
@@ -111,8 +113,9 @@ export default function EditModal({ isOpen, onClose, item, setUserData  }) {
               onClick={handleSave}
               type="button"
               className="text-white bg-[#4ed964] hover:opacity-80 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5"
+              disabled={isSaving}
             >
-              Guardar Cambios
+              {isSaving ? 'Guardando...' : 'Guardar Cambios'}
             </button>
           </div>
         </div>
