@@ -20,3 +20,19 @@ export async function fetchUserData() {
     throw error;
   }
 }
+
+export async function updateUserData(userId, updatedUserData) {
+  const url = `${API_BASE_URL}/${userId}`;
+  const headers = {
+    'app-id': apiKey,
+    'Content-Type': 'application/json',
+  };
+
+  try {
+    const response = await axios.put(url, updatedUserData, { headers });
+    return response.data;
+  } catch (error) {
+    console.error('Error al actualizar datos del usuario:', error);
+    throw error;
+  }
+}
