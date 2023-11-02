@@ -1,5 +1,7 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback, lazy, Suspense } from 'react';
 import { fetchUserData, updateUserData } from '../../services/api';
+const LazyInputField = lazy(() => import('./InputField'));
+const LazySelectField = lazy(() => import('./SelectField'));
 
 export default function EditModal({ isOpen, onClose, item, setUserData }) {
   const [editedItem, setEditedItem] = useState(item || {});
@@ -11,15 +13,18 @@ export default function EditModal({ isOpen, onClose, item, setUserData }) {
     }
   }, [item]);
 
-  const handleFieldChange = (e) => {
-    const { name, value } = e.target;
-    setEditedItem({
-      ...editedItem,
-      [name]: value,
-    });
-  };
+  const handleFieldChange = useCallback(
+    (e) => {
+      const { name, value } = e.target;
+      setEditedItem({
+        ...editedItem,
+        [name]: value,
+      });
+    },
+    [editedItem]
+  );
 
-  const handleSave = async () => {
+  const handleSave = useCallback(async () => {
     setIsSaving(true);
     try {
       await updateUserData(editedItem.id, editedItem);
@@ -32,7 +37,7 @@ export default function EditModal({ isOpen, onClose, item, setUserData }) {
       setIsSaving(false);
       onClose();
     }
-  };
+  }, [editedItem, onClose, setUserData]);
 
   return (
     <div
@@ -46,60 +51,12 @@ export default function EditModal({ isOpen, onClose, item, setUserData }) {
             <h2 className="text-lg font-semibold text-gray-800">Editar Usuario</h2>
           </div>
           <form className="p-4 border-b rounded-t space-y-3">
-            <div className="flex items-center space-x-3">
-              <label htmlFor="title" className="w-1/6 text-right font-semibold text-gray-700">
-                Título:
-              </label>
-              <select
-                name="title"
-                value={editedItem.title || ''}
-                onChange={handleFieldChange}
-                className="px-2 py-2 border border-gray-300 rounded-md flex-1 focus:outline-none text-gray-600 capitalize"
-              >
-                <option value="" selected hidden>
-                  {editedItem.title || ''}
-                </option>
-                <option value="mr.">Mr.</option>
-                <option value="ms.">Ms.</option>
-                <option value="miss.">Miss.</option>
-              </select>
-            </div>
-            <div className="flex items-center space-x-3">
-              <label htmlFor="firstName" className="w-1/6 text-right font-semibold text-gray-700">
-                Nombres:
-              </label>
-              <input
-                type="text"
-                name="firstName"
-                value={editedItem.firstName || ''}
-                onChange={handleFieldChange}
-                className="px-2 py-2 border border-gray-300 rounded-md flex-1 focus:outline-none text-gray-600"
-              />
-            </div>
-            <div className="flex items-center space-x-3">
-              <label htmlFor="lastName" className="w-1/6 text-right font-semibold text-gray-700">
-                Apellidos:
-              </label>
-              <input
-                type="text"
-                name="lastName"
-                value={editedItem.lastName || ''}
-                onChange={handleFieldChange}
-                className="px-2 py-2 border border-gray-300 rounded-md flex-1 focus:outline-none text-gray-600"
-              />
-            </div>
-            <div className="flex items-center space-x-3">
-              <label htmlFor="pciture" className="w-1/6 text-right font-semibold text-gray-700">
-                Foto:
-              </label>
-              <input
-                type="text"
-                name="pciture"
-                value={editedItem.picture || ''}
-                onChange={handleFieldChange}
-                className="px-2 py-2 border border-gray-300 rounded-md flex-1 focus:outline-none text-gray-600"
-              />
-            </div>
+            <Suspense fallback={<div>Cargando...</div>}>
+              <LazySelectField label="Título" name="title" value={editedItem.title} onChange={handleFieldChange} />
+              <LazyInputField label="Nombres" name="firstName" value={editedItem.firstName} onChange={handleFieldChange} />
+              <LazyInputField label="Apellidos" name="lastName" value={editedItem.lastName} onChange={handleFieldChange} />
+              <LazyInputField label="Foto" name="picture" value={editedItem.picture} onChange={handleFieldChange} />
+            </Suspense>
           </form>
           <div className="flex items-center space-x-3 p-4 border-b rounded-t">
             <button
