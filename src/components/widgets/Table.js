@@ -96,7 +96,7 @@ export default memo(function Table({ data, setUserData }) {
         />
       </Suspense>
       <Suspense fallback={<div>Loading...</div>}>
-        <LazyInfoModal isOpen={isInfoModalOpen} onClose={closeModal} />
+        <LazyInfoModal isOpen={isInfoModalOpen} onClose={closeModal} item={selectedItem} />
       </Suspense>
     </div>
   );

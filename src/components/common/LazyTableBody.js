@@ -10,7 +10,9 @@ export default function LazyTableBody({ data, onIconClick }) {
           <td className="md:p-2 before:content-['Id'] before:mr-0.5 before:font-bold before:text-[#1a6e6a] md:before:content-[]">
             {item.id}
           </td>
-          <td className="md:p-2 capitalize before:content-['Nombre'] before:mr-0.5 before:font-bold before:text-[#1a6e6a] md:before:content-[]">{`${item.title} ${item.firstName} ${item.lastName}`}</td>
+          <td className="md:p-2 capitalize before:content-['Nombre'] before:mr-0.5 before:font-bold before:text-[#1a6e6a] md:before:content-[]">
+            {item.title === 'miss' ? 'Sra' : item.title} {item.firstName} {item.lastName}
+          </td>
           <td
             className="md:p-2 flex gap-x-2.5 before:content-['Foto'] before:mr-0.5 before:font-bold before:text-[#1a6e6a]  md:before:content-[] md:table-cell"
             data-header="Picture"
