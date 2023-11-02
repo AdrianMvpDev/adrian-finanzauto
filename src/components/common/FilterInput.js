@@ -2,7 +2,7 @@ import React from 'react';
 
 export default function FilterInput({ filterTerm, setFilterTerm }) {
   return (
-    <div className="mb-4 flex items-center">
+    <div className="flex items-center md:mb-4">
       <input
         type="text"
         placeholder="Filtrar por ID o nombre"

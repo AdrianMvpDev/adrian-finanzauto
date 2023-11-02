@@ -60,7 +60,7 @@ export default memo(function Table({ data, setUserData }) {
   const totalPages = Math.ceil(filteredData.length / itemsPerPage);
 
   return (
-    <div className="w-4/5 mx-auto my-10">
+    <div className="w-full px-[15px] mx-auto my-10 md:w-4/5 md:px-0">
       <FilterInput filterTerm={filterTerm} setFilterTerm={setFilterTerm} />
       <table className="w-full table-auto">
         <thead>
