@@ -1,4 +1,3 @@
-// Table.js
 import React, { lazy, Suspense, memo, useState } from 'react';
 import FilterInput from '../common/FilterInput';
 import Paginator from './Paginator';

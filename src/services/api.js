@@ -51,3 +51,19 @@ export async function deleteUserData(userId) {
     throw error;
   }
 }
+
+export async function createUserData(newUserData) {
+  const url = `${API_BASE_URL}/create`;
+  const headers = {
+    'app-id': apiKey,
+    'Content-Type': 'application/json',
+  };
+
+  try {
+    const response = await axios.post(url, {newUserData}, {headers} );
+    return response.data;
+  } catch (error) {
+    console.error('Error al crear un nuevo usuario:', error);
+    throw error;
+  }
+}
