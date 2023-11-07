@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const apiKey = '6542e26ce797a5ea92c029f6';
+const apiKey = '65456a87ca30941886739588';
 const API_BASE_URL = 'https://dummyapi.io/data/v1/user';
 
 export async function fetchUserData() {
